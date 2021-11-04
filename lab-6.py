@@ -7,78 +7,79 @@
 
 from graphicsCS151 import *
 from graphics import *
+import random
 
 
-def get_coordinate (min, max, message):
-    coord = int(input(message))
-    while not (coord >= min and coord <= max):
-        coord = int(input(message))
-    return coord
+def make_circle(x, y, radius):
+    circle = Circle(Point(x, y), radius)
+    circle.setFill("red")
+    circle.setOutline("black")
+    return circle
 
 
-height = 500
-width = height
-radius = 28
+def find_x(min, max, message):
+    is_valid = False
+    return_statement = None
 
-def make_window( title, width, height ):
-    win = GraphWin( title, width, height )
-    return win
+    while not is_valid:
+        print("Please enter a number between " + str(min) + " and " + str(max))
+        message = input(message)
+
+        while not message.isdigit():
+            print("Please re-enter a number: ")
+            message = input(message)
+
+        message = int(message)
+        is_valid = message in range(min, max)
+        return_statement = message
+    return return_statement
 
 
-def make_circle( x, y, radius ):
-    return Circle( Point( x, y ), radius )
+def color_change():
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    rgb = [r, g, b]
+    generate_color = color_rgb(rgb[0], rgb[1], rgb[2])
+    return generate_color
 
 
-def color_circle(circle, color ):
-    circle.setFill( color )
-    circle.setOutline( color )
-
-
-def move( circle, moveX, moveY ):
-    circle.move( moveX, moveY  )
-
-def change_title( window,title ):
-    window.master.title( title )
-
-def sleep( ms):
-    time.sleep( ms / 1000 )
 
 
 def main():
-    win = GraphWin("My Circle", 500, 500)
-    c = Circle(Point(50, 50), 10)
-    c.draw(win)
-    win.getMouse()  # Pause to view result
-    win.close()  # Close window when done
-    x = get_coordinate(50, 450, "Enter starting x coordinate between 50 and 450: ")
-    y = 20
-    circle = make_circle(x, y, 20)
-    dx = 2
-    dy = 2
-    hit_top = False
+    initial_x = find_x(50, 450, "At which point would you like to start: ")
+    print("Your x value is valid")
+    height = 500
+    width = height
+    radius = 20
+    motion_x = 1
+    motion_y = 1
 
-    while not hit_top:
+    window = make_window("lab-6", width, height)
+    window.setBackground("black")
 
-        move(circle, dx, dy)
+    left = window.getWidth() - 20
+    right = radius
+    bottom = radius
+    top = window.getHeight() - 20
 
-        if (circle.GetCenter().x + circle.GetRadius()) >= win.GetWidth() or (
-            circle.GetCenter().x - circle.GetRadius()) <= 0:
-            dx = -dx
+    circle = make_circle(initial_x, radius, radius)
+    circle.draw(window)
 
-        if (circle.GetCenter().y + circle.GetRadius()) >= win.getHeight():
-            dy = -dy
-        hit_top = True
+    while window.checkMouse() is None:
+        while True:
+            circle.move(motion_x, motion_y)
 
-        if (circle.GetCenter().y - circle.GetRadius()) <= 0:
-            hit_top = True
-            sleep(1)
+            if circle.getCenter().getY() <= bottom or circle.getCenter().getY() >= top:
+                motion_y = -motion_y
+                circle.setFill(color_change())
+            elif circle.getCenter().getX() <= right or circle.getCenter().getX() >= left:
+                motion_x = -motion_x
+                circle.setFill(color_change())
+
+
+    window.getMouse()
+    window.close()
 
 
 main()
-
-
-
-
-
-
-
