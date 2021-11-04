@@ -18,10 +18,10 @@ def make_circle(x, y, radius):
 
 
 def find_x(min, max, message):
-    is_valid = False
+    initial = False
     return_statement = None
 
-    while not is_valid:
+    while not initial:
         print("Please enter a number between " + str(min) + " and " + str(max))
         message = input(message)
 
@@ -30,7 +30,7 @@ def find_x(min, max, message):
             message = input(message)
 
         message = int(message)
-        is_valid = message in range(min, max)
+        initial = message in range(min, max)
         return_statement = message
     return return_statement
 
@@ -39,11 +39,9 @@ def color_change():
     r = random.randint(0, 255)
     g = random.randint(0, 255)
     b = random.randint(0, 255)
-    rgb = [r, g, b]
-    generate_color = color_rgb(rgb[0], rgb[1], rgb[2])
+    color_generator = [r, g, b]
+    generate_color = color_rgb(color_generator[0], color_generator[1], color_generator[2])
     return generate_color
-
-
 
 
 def main():
@@ -52,8 +50,8 @@ def main():
     height = 500
     width = height
     radius = 20
-    motion_x = 1
-    motion_y = 1
+    motion_x = 5
+    motion_y = 5
 
     window = make_window("lab-6", width, height)
     window.setBackground("black")
@@ -76,7 +74,6 @@ def main():
             elif circle.getCenter().getX() <= right or circle.getCenter().getX() >= left:
                 motion_x = -motion_x
                 circle.setFill(color_change())
-
 
     window.getMouse()
     window.close()
